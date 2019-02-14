@@ -1,2 +1,2 @@
 # ECDI_delinquencies
-better way to pull delinquency report
+better way to pull delinquency reports
