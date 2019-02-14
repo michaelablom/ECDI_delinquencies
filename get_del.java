@@ -11,28 +11,87 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 
 public class get_del {
 
 	public static void main(String[] args) {
 		ArrayList<loan> loans = new ArrayList<loan>();
-		//Port_RM rms = new Port_RM();
+		Port_RM rms = new Port_RM();
+		String to_do = null;
 		
-		loans = read("//ecdifileprint01\\redirect$\\aselengut\\Desktop/read.csv");
+		
+		loans = read("/Users/Alex/Desktop/to_read_prot.csv");
+		
+		rms = make_rm(loans);
+		
+		Object[] possibilities = {"On Book", "Off Book", "Both", "Full"};
+		String type = (String)JOptionPane.showInputDialog(
+		                    
+		                    null, "Type of delinquency report:\n"
+		                    + "",
+		                    "Choice 1",
+		                    JOptionPane.PLAIN_MESSAGE,
+		                  
+		                    null, possibilities,
+		                    "On Book");
+		
+		while(type == null) {
+			type = (String)JOptionPane.showInputDialog(
+                    
+                    null, "Please make a selection:\n"
+                    + "",
+                    "Choice 1",
+                    JOptionPane.PLAIN_MESSAGE,
+                  
+                    null, possibilities,
+                    "On Book");
+		}
+		
+		Object[] q = {"Yes", "No"};
+		String answer = (String)JOptionPane.showInputDialog(
+		                    
+		                    null, "Do you want data on RM's"
+		                    + "",
+		                    "Choice 2",
+		                    JOptionPane.PLAIN_MESSAGE,
+		                  
+		                    null, q,
+		                    "Yes");
+		if(answer == "Yes") {
+			Object[] z = rms.mymap.keySet().toArray();
+			to_do = (String)JOptionPane.showInputDialog(
+			                    
+			                   null, "Do you want data on RM's"
+			                   + "",
+			                   "Choice 2",
+			                   JOptionPane.PLAIN_MESSAGE,
+			                  
+			                    null, z,
+			                    "Yes");
+		
+		}
+		
+		driver(type, to_do, loans, rms);
+	}
+	
+	public static void driver(String type, String to_do, ArrayList <loan> loans, Port_RM rms) {
+		
 		
 		ArrayList <loan> mloans = new ArrayList<loan>();
 		
 		mloans = combine(loans);
 		
-
+       
+		
 		String s = "";
 		for(loan l : mloans) {
 			s = s + l.toString() +"\n";
 		}
 		
-		to_write("//ecdifileprint01\\redirect$\\aselengut\\Desktop/write.csv",s);
-		//rms = make_rm(loans);
-		//double [] x = del(rms.mymap.get("Ahmed"));
+		//to_write("//ecdifileprint01\\redirect$\\aselengut\\Desktop/write.csv",s);
+		rms = make_rm(loans);
+		double [] get_rms = del(rms.mymap.get(to_do));
 		
 		ArrayList <loan> small = new ArrayList<loan>();
 		for(loan l : mloans) {
@@ -46,8 +105,9 @@ public class get_del {
 		onbook = split(loans,"on");
 		offbook = split(loans,"off");
 		
-		double [] y = del(onbook);
-		double [] z = del(offbook);
+		double [] on_book = del(onbook);
+		double [] off_book = del(offbook);
+		double [] combined = del(loans);
 		
 		
 		//System.out.println(rms.mymap.keySet().toString());
@@ -71,13 +131,33 @@ public class get_del {
 		x[11] = "Over 90 count: ";
 		x[12] = "60 t0 90 count: ";		
 		
-		for(int i = 0; i < y.length; i++) {
-			System.out.println(x[i]+" "+y[i]);
+		
+		if(type == "Both") {
+			for(int i = 0; i < on_book.length; i++) {
+				System.out.println(x[i]+" "+on_book[i]);
 			
+			}
+			System.out.println("\n");
+			for(int i = 0; i < off_book.length; i++) {
+				System.out.println(x[i]+" "+off_book[i]);	
+			}
+		}else if(type == "On Book") {
+			for(int i = 0; i < on_book.length; i++) {
+				System.out.println(x[i]+" "+on_book[i]);
+			
+			}
+		}else if(type == "Off Book") {
+			for(int i = 0; i < off_book.length; i++) {
+				System.out.println(x[i]+" "+off_book[i]);	
+			}
+		}else if(type == "Full") {
+			for(int i = 0; i < combined.length; i++) {
+				System.out.println(x[i]+" "+combined[i]);	
+			}
 		}
 		System.out.println("\n");
-		for(int i = 0; i < y.length; i++) {
-			System.out.println(x[i]+" "+z[i]);	
+		for(int i = 0; i < combined.length; i++) {
+			System.out.println(x[i]+" "+get_rms[i]);	
 		}
 		
 	}
@@ -204,7 +284,7 @@ public class get_del {
 		for(loan l : loans) {
 			total_amount += l.principal_balance;
 		}
-		double atrisk = del_90 + del_120+del_150+del_180;
+		double atrisk = del_30+del_60+del_90 + del_120+del_150+del_180;
 		
 		x[0] = del;
 		x[1] = del_1;
@@ -298,4 +378,3 @@ public class get_del {
 	}
 
 }
-
