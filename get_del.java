@@ -21,7 +21,7 @@ public class get_del {
 		String to_do = null;
 		
 		
-		loans = read("/Users/Alex/Desktop/to_read_prot.csv");
+		loans = read("//ecdifileprint01\\redirect$\\aselengut\\Desktop/read.csv");
 		
 		rms = make_rm(loans);
 		
@@ -33,17 +33,14 @@ public class get_del {
 		                    "Choice 1",
 		                    JOptionPane.PLAIN_MESSAGE,
 		                  
-		                    null, possibilities,
-		                    "On Book");
+		                    null, possibilities, "On Book");
 		
 		while(type == null) {
 			type = (String)JOptionPane.showInputDialog(
                     
-                    null, "Please make a selection:\n"
-                    + "",
+                    null, "Please make a selection:\n"+ "",
                     "Choice 1",
-                    JOptionPane.PLAIN_MESSAGE,
-                  
+                    JOptionPane.PLAIN_MESSAGE,              
                     null, possibilities,
                     "On Book");
 		}
@@ -60,6 +57,7 @@ public class get_del {
 		                    "Yes");
 		if(answer == "Yes") {
 			Object[] z = rms.mymap.keySet().toArray();
+			
 			to_do = (String)JOptionPane.showInputDialog(
 			                    
 			                   null, "Do you want data on RM's"
@@ -84,14 +82,12 @@ public class get_del {
 		
        
 		
-		String s = "";
-		for(loan l : mloans) {
-			s = s + l.toString() +"\n";
-		}
 		
-		//to_write("//ecdifileprint01\\redirect$\\aselengut\\Desktop/write.csv",s);
 		rms = make_rm(loans);
-		double [] get_rms = del(rms.mymap.get(to_do));
+		double [] get_rms = null;
+		if(to_do != null) {
+			get_rms = del(rms.mymap.get(to_do));
+		}
 		
 		ArrayList <loan> small = new ArrayList<loan>();
 		for(loan l : mloans) {
@@ -104,6 +100,15 @@ public class get_del {
 		ArrayList <loan> offbook = new ArrayList<loan>();
 		onbook = split(loans,"on");
 		offbook = split(loans,"off");
+		
+		ArrayList <loan> monloans = new ArrayList<loan>();
+		monloans = combine(onbook);
+		String s = "";
+		for(loan l : monloans) {
+			s = s + l.toString() +"\n";
+		}
+		
+		to_write("//ecdifileprint01\\redirect$\\aselengut\\Desktop/write.csv",s);
 		
 		double [] on_book = del(onbook);
 		double [] off_book = del(offbook);
@@ -118,7 +123,7 @@ public class get_del {
 		
 		String [] x = new String [13]; 
 		x[0] = "Total Delinquent:";
-		x[1] = "Under 30 days:";
+		x[1] = "Under 30 days:   ";
 		x[2] = "30 to 60:";
 		x[3] = "60 to 90:";
 		x[4] = "90 to 120:";
@@ -155,24 +160,25 @@ public class get_del {
 				System.out.println(x[i]+" "+combined[i]);	
 			}
 		}
-		System.out.println("\n");
-		for(int i = 0; i < combined.length; i++) {
-			System.out.println(x[i]+" "+get_rms[i]);	
-		}
 		
+		if(to_do != null) {
+			System.out.println("\n"+to_do+":\n"+x[10]+" "+get_rms[10]);
+			
+		}	
 	}
 	
 	public static ArrayList<loan> split (ArrayList<loan> loan, String onoff){
 		ArrayList<loan> x = new ArrayList<loan> ();
 		if(onoff.equals("on")) {
 			for(loan l : loan) {
-				if(!(l.Fund.equals("City Of Columbus"))&& !(l.Fund.equals("Cuyahoga County"))&&!(l.Fund.equals("Franklin County"))) {
+				if(!(l.Fund.equals("City Of Columbus"))&& !(l.Fund.equals("Cuyahoga County"))&&!(l.Fund.equals("Franklin County"))
+						&&!(l.Fund.equals("City of Canton"))) {
 					x.add(l);
 				}
 			}
 		}else {
 			for(loan l : loan) {
-				if(l.Fund.equals("City Of Columbus")||l.Fund.equals("Cuyahoga County")||l.Fund.equals("Franklin County")) {
+				if(l.Fund.equals("City Of Columbus")||l.Fund.equals("Cuyahoga County")||l.Fund.equals("Franklin County")||l.Fund.equals("City of Canton")) {
 					x.add(l);
 				}
 			}
@@ -212,6 +218,7 @@ public class get_del {
 
 	public static loan make_loan(String [] meta) {
 		loan x = new loan ();
+		
 		x.Fund = meta[0];
 	
 		String y = meta[5].substring(0, meta[5].length()-1);
@@ -284,7 +291,7 @@ public class get_del {
 		for(loan l : loans) {
 			total_amount += l.principal_balance;
 		}
-		double atrisk = del_30+del_60+del_90 + del_120+del_150+del_180;
+		double atrisk = del_60+del_90 + del_120+del_150+del_180;
 		
 		x[0] = del;
 		x[1] = del_1;
@@ -322,7 +329,7 @@ public class get_del {
 	public static loan add(loan l1, loan l2) {
 		loan l3 = new loan();
 		l3.ID = l1.ID;
-		l3.Fund = l1.Fund;
+		l3.Fund = l1.Fund+ ": "+ l2.Fund;
 		l3.RM = l1.RM;
 		l3.amount = l1.amount + l2.amount;
 		l3.principal_balance = l1.principal_balance + l2.principal_balance;
