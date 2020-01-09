@@ -3,8 +3,10 @@ package delinquency;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -21,7 +23,7 @@ public class get_del {
 		String to_do = null;
 		
 		
-		loans = read("//ecdifileprint01\\redirect$\\aselengut\\Desktop/read.csv");
+		loans = read("L:\\Reports\\Monthly - Loan Closings reports\\Logitudinal_Program/read.csv");
 		
 		rms = make_rm(loans);
 		
@@ -74,13 +76,19 @@ public class get_del {
 	}
 	
 	public static void driver(String type, String to_do, ArrayList <loan> loans, Port_RM rms) {
-		
-		
+		PrintStream o = null;
+		try {
+			o = new PrintStream(new File("L:\\Reports\\Monthly - Loan Closings reports\\Logitudinal_Program/Output.txt"));
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+		System.setOut(o);
 		ArrayList <loan> mloans = new ArrayList<loan>();
 		
 		mloans = combine(loans);
 		
-       
+	
 		
 		
 		rms = make_rm(loans);
@@ -108,7 +116,7 @@ public class get_del {
 			s = s + l.toString() +"\n";
 		}
 		
-		to_write("//ecdifileprint01\\redirect$\\aselengut\\Desktop/write.csv",s);
+		//to_write("//ecdifileprint01\\redirect$\\aselengut\\Desktop/write.csv",s);
 		
 		double [] on_book = del(onbook);
 		double [] off_book = del(offbook);
@@ -123,7 +131,7 @@ public class get_del {
 		
 		String [] x = new String [13]; 
 		x[0] = "Total Delinquent:";
-		x[1] = "Under 30 days:   ";
+		x[1] = "Under 30 days:";
 		x[2] = "30 to 60:";
 		x[3] = "60 to 90:";
 		x[4] = "90 to 120:";
@@ -162,7 +170,10 @@ public class get_del {
 		}
 		
 		if(to_do != null) {
-			System.out.println("\n"+to_do+":\n"+x[10]+" "+get_rms[10]);
+			System.out.println("\n\n"+to_do+":\n");
+			for(int i = 0; i < get_rms.length-2; i++) {
+				System.out.println(x[i]+" "+get_rms[i]);	
+			}
 			
 		}	
 	}
