@@ -116,7 +116,7 @@ public class get_del {
 			s = s + l.toString() +"\n";
 		}
 		
-		//to_write("//ecdifileprint01\\redirect$\\aselengut\\Desktop/write.csv",s);
+		//to_write("//ecdifileprint01\\redirect$\\mblom\\Desktop/write.csv",s);
 		
 		double [] on_book = del(onbook);
 		double [] off_book = del(offbook);
