@@ -182,14 +182,15 @@ public class get_del {
 		ArrayList<loan> x = new ArrayList<loan> ();
 		if(onoff.equals("on")) {
 			for(loan l : loan) {
-				if(!(l.Fund.equals("City Of Columbus"))&& !(l.Fund.equals("Cuyahoga County"))&&!(l.Fund.equals("Franklin County"))
-						&&!(l.Fund.equals("City of Canton"))) {
+				if(!(l.Fund.equals("City Of Columbus"))&& !(l.Fund.equals("City of Columbus PV 2020"))&&!(l.Fund.equals("Franklin County"))
+						&&!(l.Fund.equals("Paycheck Protection Program"))&&!(l.Fund.equals("Franklin CTY 2020"))) {
 					x.add(l);
 				}
 			}
 		}else {
 			for(loan l : loan) {
-				if(l.Fund.equals("City Of Columbus")||l.Fund.equals("Cuyahoga County")||l.Fund.equals("Franklin County")||l.Fund.equals("City of Canton")) {
+				if(l.Fund.equals("City Of Columbus")||l.Fund.equals("City of Columbus PV 2020")||l.Fund.equals("Franklin County")
+				   ||l.Fund.equals("Paycheck Protection Program")||l.Fund.equals("Franklin CTY 2020")) {
 					x.add(l);
 				}
 			}
